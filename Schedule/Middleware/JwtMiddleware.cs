@@ -46,20 +46,18 @@ namespace Schedule.Middleware
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
-                // attach account to context on successful jwt validation
+                //Anexando conta ao contexto
                 context.Items["Account"] = await dataContext.Accounts.SingleOrDefaultAsync(a => a.Id == accountId);
             }
             catch
             {
-                // do nothing if jwt validation fails
-                // account is not attached to context so request won't have access to secure routes
+                //Não fazer nada
             }
         }
 

@@ -46,25 +46,23 @@ namespace Schedule.Controllers
         [HttpPost("revoke-token")]
         public IActionResult RevokeToken(AccountRevokeTokenRequest model)
         {
-            // accept token from request body or cookie
             var token = model.Token ?? Request.Cookies["refreshToken"];
 
             if (string.IsNullOrEmpty(token))
                 return BadRequest(new { message = "Token is required" });
 
-            // users can revoke their own tokens and admins can revoke any tokens
             if (!Account.OwnsToken(token) && Account.Role != Role.Admin)
                 return Unauthorized(new { message = "Unauthorized" });
 
             _accountService.RevokeToken(token, ipAddress());
-            return Ok(new { message = "Token revoked" });
+            return Ok(new { message = "Token revogado" });
         }
 
         [HttpPost("register")]
         public IActionResult Register(AccountRegisterRequest model)
         {
             _accountService.Register(model, Request.Headers["origin"]);
-            return Ok(new { message = "Registration successful, please check your email for verification instructions" });
+            return Ok(new { message = "Registro bem-sucedido, verifique seu e-mail para obter instruções de verificação" });
         }
 
 
@@ -72,28 +70,28 @@ namespace Schedule.Controllers
         public IActionResult VerifyEmail(AccountVerifyEmailRequest model)
         {
             _accountService.VerifyEmail(model.Token);
-            return Ok(new { message = "Verification successful, you can now login" });
+            return Ok(new { message = "Verificação bem-sucedida, agora você pode fazer login" });
         }
 
         [HttpPost("forgot-password")]
         public IActionResult ForgotPassword(AccountForgotPasswordRequest model)
         {
             _accountService.ForgotPassword(model, Request.Headers["origin"]);
-            return Ok(new { message = "Please check your email for password reset instructions" });
+            return Ok(new { message = "Verifique seu e-mail para obter instruções de redefinição de senha" });
         }
 
         [HttpPost("validate-reset-token")]
         public IActionResult ValidateResetToken(AccountValidateResetTokenRequest model)
         {
             _accountService.ValidateResetToken(model);
-            return Ok(new { message = "Token is valid" });
+            return Ok(new { message = "Token válido" });
         }
 
         [HttpPost("reset-password")]
         public IActionResult ResetPassword(AccountResetPasswordRequest model)
         {
             _accountService.ResetPassword(model);
-            return Ok(new { message = "Password reset successful, you can now login" });
+            return Ok(new { message = "Redefinição de senha bem-sucedida, agora você pode fazer login" });
         }
 
         [Authorize(Role.Admin)]
@@ -108,9 +106,9 @@ namespace Schedule.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<AccountResponse> GetById(int id)
         {
-            // users can get their own account and admins can get any account
+            //Admins acessam qualquer conta. Usuários só podem acessar sua própria conta
             if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
+                return Unauthorized(new { message = "Não Autorizado" });
 
             var account = _accountService.GetById(id);
             return Ok(account);
@@ -128,11 +126,10 @@ namespace Schedule.Controllers
         [HttpPut("{id:int}")]
         public ActionResult<AccountResponse> Update(int id, AccountUpdateRequest model)
         {
-            // users can update their own account and admins can update any account
+            //Admins conseguem alterar qualquer conta
             if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
+                return Unauthorized(new { message = "Não Autorizado" });
 
-            // only admins can update role
             if (Account.Role != Role.Admin)
                 model.Role = null;
 
@@ -144,12 +141,12 @@ namespace Schedule.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            // users can delete their own account and admins can delete any account
+            //Admins conseguem deletar qualquer conta
             if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
+                return Unauthorized(new { message = "Não Autorizado" });
 
             _accountService.Delete(id);
-            return Ok(new { message = "Account deleted successfully" });
+            return Ok(new { message = "Conta excluída com sucesso" });
         }
 
 

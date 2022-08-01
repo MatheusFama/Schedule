@@ -330,12 +330,12 @@ namespace Schedule.Services
             if (!string.IsNullOrEmpty(origin))
             {
                 var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
-                message = $@"<p>Please click the below link to verify your email address:</p>
+                message = $@"<p>Por favor, clique no link abaixo para verificar seu endereço de e-mail:</p>
                              <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
             }
             else
             {
-                message = $@"<p>Please use the below token to verify your email address with the <code>/accounts/verify-email</code> api route:</p>
+                message = $@"<p>Please Use o token abaixo para verificar seu endereço de e-mail com o <code>/accounts/verify-email</code> api route:</p>
                              <p><code>{account.VerificationToken}</code></p>";
             }
 
@@ -352,14 +352,14 @@ namespace Schedule.Services
         {
             string message;
             if (!string.IsNullOrEmpty(origin))
-                message = $@"<p>If you don't know your password please visit the <a href=""{origin}/account/forgot-password"">forgot password</a> page.</p>";
+                message = $@"<p>Se você não sabe sua senha, visite o <a href=""{origin}/account/forgot-password"">forgot password</a> page.</p>";
             else
-                message = "<p>If you don't know your password you can reset it via the <code>/accounts/forgot-password</code> api route.</p>";
+                message = "<p>Se você não sabe sua senha, você pode redefini-la através do <code>/accounts/forgot-password</code> api route.</p>";
 
             _emailService.Send(
                 to: email,
                 subject: "Sign-up Verification API - Email Already Registered",
-                html: $@"<h4>Email Already Registered</h4>
+                html: $@"<h4>E-mail já registrado</h4>
                          <p>Your email <strong>{email}</strong> is already registered.</p>
                          {message}"
             );
@@ -371,19 +371,19 @@ namespace Schedule.Services
             if (!string.IsNullOrEmpty(origin))
             {
                 var resetUrl = $"{origin}/account/reset-password?token={account.ResetToken}";
-                message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
+                message = $@"<p>Por favor, clique no link abaixo para redefinir sua senha, o link será válido por 1 dia:</p>
                              <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
             }
             else
             {
-                message = $@"<p>Please use the below token to reset your password with the <code>/accounts/reset-password</code> api route:</p>
+                message = $@"<p>Por favor, use o token abaixo para redefinir sua senha com o <code>/accounts/reset-password</code> api route:</p>
                              <p><code>{account.ResetToken}</code></p>";
             }
 
             _emailService.Send(
                 to: account.Email,
                 subject: "Sign-up Verification API - Reset Password",
-                html: $@"<h4>Reset Password Email</h4>
+                html: $@"<h4>Redefinir e-mail de senha</h4>
                          {message}"
             );
         }

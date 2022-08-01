@@ -51,6 +51,7 @@ namespace Schedule
             app.UseRouting();
 
             app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthorization();
 

@@ -23,7 +23,7 @@ namespace Schedule.Helpers
             var account = (Account)context.HttpContext.Items["Account"];
             if (account == null || (_roles.Any() && !_roles.Contains(account.Role)))
             {
-                context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+                context.Result = new JsonResult(new { message = "Não autorizado" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
         }
     }
